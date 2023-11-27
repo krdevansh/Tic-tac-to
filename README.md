@@ -1,1 +1,97 @@
 # Tic-tac-to
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <h1><i>Tic-Tac-Toe created <br>by Mr.Devansh</i></h1>
+    <style>
+        body {
+            background-color: rgb(220, 13, 13);
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            text-align: center;
+        }
+
+        #board {
+            display:grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 1px;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 3px solid #0b0101;
+            font-size: 86px;
+          
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 55px;
+            font-size: 88px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="board"></div>
+<div id="result"></div>
+
+<script>
+    let currentPlayer = 'X';
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let gameActive = true;
+
+    const boardElement = document.getElementById('board');
+    const resultElement = document.getElementById('result');
+
+    // Create the Tic Tac Toe board
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleCellClick);
+        boardElement.appendChild(cell);
+    }
+
+    // Handle cell click
+    function handleCellClick(event) {
+        const clickedIndex = event.target.dataset.index;
+
+        if (board[clickedIndex] === '' && gameActive) {
+            board[clickedIndex] = currentPlayer;
+            event.target.textContent = currentPlayer;
+
+            if (checkWinner()) {
+                resultElement.textContent = `${currentPlayer} Win!`;
+                gameActive = false;
+            } else if (board.every(cell => cell !== '')) {
+                resultElement.textContent = 'Draw!';
+                gameActive = false;
+            } else {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            }
+        }
+    }
+
+    // Check for a winner
+    function checkWinner() {
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]              // Diagonals
+        ];
+
+        return winPatterns.some(pattern => {
+            const [a, b, c] = pattern;
+            return board[a] !== '' && board[a] === board[b] && board[b] === board[c];
+        });
+    }
+</script>
+
+</body>
+</html>
